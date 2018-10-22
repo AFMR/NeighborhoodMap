@@ -1,0 +1,15 @@
+#map {
+  height: 100vh;
+}
+
+.gm-style-iw {
+  max-width: 60vw;
+}
+
+.ariaAlert {
+  display: none;
+}
+
+#aria-alert {
+  display: none;
+}
