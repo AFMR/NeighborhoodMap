@@ -31,7 +31,7 @@ class Map extends Component {
         places: parsedJSON.response.groups[0].items
       },
       this.loadOrInitializeMap())
-    }).catch(error => {console.log('Foursquare encountered an error', error)})
+    }).catch(error => {alert('Foursquare encountered an error', error)})
   }
 
   loadOrInitializeMap = () => {
@@ -101,7 +101,7 @@ class Map extends Component {
 
   loadMap = (src) => {
     const failureHandler = window.gm_authFailure = function() {
-      console.log('An error has occurred when authenticating to google maps.');
+      alert('An error has occurred when authenticating to google maps.');
     }
 
     const firstScript = window.document.getElementsByTagName('script')[0]
