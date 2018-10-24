@@ -28,10 +28,11 @@ class Search extends Component {
 
   render() {
     return (
-      <div class='search'>
+      <div className='search'>
         <form onSubmit={this.onSubmit} role="search">
           <label>
-            <input type="text" name="place-type"
+            <input type="text"
+            name="place-type"
             placeholder='Search'
             aria-label='Enter your search'
             onChange={this.onChange}/>
@@ -46,7 +47,7 @@ class Search extends Component {
                   const categories = place.venue.categories[0] ? place.venue.categories[0].name : "";
                   return(
                   <li key={index}>
-                    <a class="place-name"
+                    <a className="place-name"
                       aria-label={`${place.venue.name} ${place.venue.location.formattedAddress} ${categories}`  }
                       onClick={() => {this.click(place.venue.id)}}
                       onKeyPress={() => {this.click(place.venue.id)}}

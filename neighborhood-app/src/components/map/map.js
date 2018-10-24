@@ -31,7 +31,10 @@ class Map extends Component {
         places: parsedJSON.response.groups[0].items
       },
       this.loadOrInitializeMap())
-    }).catch(error => {alert('Foursquare encountered an error', error)})
+    }).catch(error => {
+      alert('Foursquare encountered an error');
+      console.log(error);
+    });
   }
 
   loadOrInitializeMap = () => {
@@ -55,6 +58,13 @@ class Map extends Component {
     var bounds = new window.google.maps.LatLngBounds();
 
     this.props.places.forEach(markedPlace => {
+      let category = '';
+      if (markedPlace.venue.categories !== 'undefined' &&
+          markedPlace.venue.categories[0] !== 'undefined' &&
+          markedPlace.venue.categories.length > 0){
+        category = markedPlace.venue.categories[0].name;
+      }
+
       var placeDescriptionHtml =
       `<div tabIndex="0">
         <h1>${markedPlace.venue.name}</h1>
@@ -66,9 +76,9 @@ class Map extends Component {
           </b>
         </p>
         <div>
-          <p>${markedPlace.venue.categories[0].name}</p>
+          <p>${category}</p>
         </div>
-      </div>`
+      </div>`;
 
       var marker = new window.google.maps.Marker({
         title: markedPlace.venue.name,
@@ -78,21 +88,21 @@ class Map extends Component {
           lng: markedPlace.venue.location.lng
         },
         map: map
-      })
+      });
 
-      var mapsInfoWindow = new window.google.maps.InfoWindow()
+      var mapsInfoWindow = new window.google.maps.InfoWindow();
       marker.addListener('click', () => {
         map.setCenter(marker.getPosition())
         marker.setAnimation(window.google.maps.Animation.BOUNCE)
         setTimeout(() => { marker.setAnimation(null) }, 1000)
         mapsInfoWindow.setContent(placeDescriptionHtml)
         mapsInfoWindow.open(map, marker)
-      })
+      });
 
-      this.props.addMarker(marker)
+      this.props.addMarker(marker);
       var loc = new window.google.maps.LatLng(marker.position.lat(), marker.position.lng());
       
-      bounds.extend(loc)
+      bounds.extend(loc);
     })
 
     map.fitBounds(bounds)
@@ -115,6 +125,12 @@ class Map extends Component {
 
     firstScript.parentNode.insertBefore(scriptElement, firstScript, failureHandler)
     window.initMap = this.initializeMap
+
+    setTimeout(() => {
+      if (typeof window.google == 'undefined' || typeof window.google.maps == 'undefined' ) {
+        alert('Google maps failed to load.')
+      }
+    }, 3000);
   }
 
   render() {
