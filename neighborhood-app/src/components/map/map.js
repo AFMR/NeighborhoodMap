@@ -2,6 +2,10 @@ import React, { Component } from 'react';
 import './map.css'
 
 class Map extends Component {
+  state = {
+    infoWindows: []
+  }
+
   componentDidMount() {
     this.getPlaces(this.props.filterQuery)
   }
@@ -91,7 +95,9 @@ class Map extends Component {
       });
 
       var mapsInfoWindow = new window.google.maps.InfoWindow();
+      this.state.infoWindows.push(mapsInfoWindow);
       marker.addListener('click', () => {
+        this.state.infoWindows.forEach(window => { window.close() });
         map.setCenter(marker.getPosition())
         marker.setAnimation(window.google.maps.Animation.BOUNCE)
         setTimeout(() => { marker.setAnimation(null) }, 1000)
@@ -130,7 +136,7 @@ class Map extends Component {
       if (typeof window.google == 'undefined' || typeof window.google.maps == 'undefined' ) {
         alert('Google maps failed to load.')
       }
-    }, 3000);
+    }, 4000);
   }
 
   render() {
