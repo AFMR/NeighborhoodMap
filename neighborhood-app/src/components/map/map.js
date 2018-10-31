@@ -17,12 +17,14 @@ class Map extends Component {
   }
 
   getPlaces = (query) => {
-    const request = 'https://api.foursquare.com/v2/venues/explore?'
+    const request = 'https://api.foursquare.com/v2/venues/search?'
     const params = {
       client_id: "DLG0O4T1FT032MXEQLHWLMKDKH5WKFTJI1G3FR2ZWQMO5U2V",
       client_secret: "0KUBI43IHXPHRX3X23K0R1VQ1U30F3YDLRFQA1HSNIKRBYSV",
       near: "Wayne, PA",
       query: query,
+      radius: 30000,
+      intent: "browse",
       v: "20180922"
     }
 
@@ -30,14 +32,15 @@ class Map extends Component {
     fetch(requestUrl)
     .then(response => response.json())
     .then(parsedJSON => {
-      this.props.addPlaces(parsedJSON.response.groups[0].items)
+      this.props.addPlaces(parsedJSON.response.venues)
       this.setState({
-        places: parsedJSON.response.groups[0].items
+        places: parsedJSON.response.venues
       },
       this.loadOrInitializeMap())
     }).catch(error => {
       alert('Foursquare encountered an error');
       console.log(error);
+      this.loadOrInitializeMap();
     });
   }
 
@@ -63,20 +66,21 @@ class Map extends Component {
 
     this.props.places.forEach(markedPlace => {
       let category = '';
-      if (markedPlace.venue.categories !== 'undefined' &&
-          markedPlace.venue.categories[0] !== 'undefined' &&
-          markedPlace.venue.categories.length > 0){
-        category = markedPlace.venue.categories[0].name;
+
+      if (markedPlace.categories !== 'undefined' &&
+          markedPlace.categories[0] !== 'undefined' &&
+          markedPlace.categories.length > 0){
+        category = markedPlace.categories[0].name;
       }
 
       var placeDescriptionHtml =
       `<div tabIndex="0">
-        <h1>${markedPlace.venue.name}</h1>
+        <h1>${markedPlace.name}</h1>
         <p>
           <b>
-            ${markedPlace.venue.location.formattedAddress[0]}
+            ${markedPlace.location.formattedAddress[0]}
             <br>
-            ${markedPlace.venue.location.formattedAddress[1]}
+            ${markedPlace.location.formattedAddress[1]}
           </b>
         </p>
         <div>
@@ -85,11 +89,11 @@ class Map extends Component {
       </div>`;
 
       var marker = new window.google.maps.Marker({
-        title: markedPlace.venue.name,
-        id: markedPlace.venue.id,
+        title: markedPlace.name,
+        id: markedPlace.id,
         position: {
-          lat: markedPlace.venue.location.lat,
-          lng: markedPlace.venue.location.lng
+          lat: markedPlace.location.lat,
+          lng: markedPlace.location.lng
         },
         map: map
       });

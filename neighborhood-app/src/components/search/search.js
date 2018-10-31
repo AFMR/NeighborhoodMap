@@ -44,15 +44,15 @@ class Search extends Component {
             <ul>
               {
                 this.props.places.map((place, index) => {
-                  const categories = place.venue.categories[0] ? place.venue.categories[0].name : "";
+                  const categories = place.categories[0] ? place.categories[0].name : "";
                   return(
                   <li key={index}>
                     <a className="place-name"
-                      aria-label={`${place.venue.name} ${place.venue.location.formattedAddress} ${categories}`  }
-                      onClick={() => {this.click(place.venue.id)}}
-                      onKeyPress={() => {this.click(place.venue.id)}}
+                      aria-label={`${place.name} ${place.location.formattedAddress} ${categories}`  }
+                      onClick={() => {this.click(place.id)}}
+                      onKeyPress={() => {this.click(place.id)}}
                       tabIndex="0">
-                        {place.venue.name}
+                        {place.name}
                     </a>
                   </li>)
                 })
